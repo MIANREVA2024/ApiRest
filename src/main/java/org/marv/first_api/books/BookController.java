@@ -37,14 +37,7 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND); //400 ok
     }
 
-   /* @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        //comprobar que no exista el isbn y si existe que return (bad_request)
-        bookRepository.save(book);
-        return book; //200 or created 201
-    }*/
-
-    @PostMapping
+     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         Optional<Book> optionalBook = this.bookRepository.findByIsbn(book.getIsbn());
         if (optionalBook.isPresent()) {
@@ -56,37 +49,41 @@ public class BookController {
     }
 
     @DeleteMapping("/{isbn}")
-    public void deleteBook(@PathVariable String isbn) {
+    public ResponseEntity<Book> deleteBook(@PathVariable String isbn, @RequestBody Book book){
         //si no existe return un 404
         //si se ha borrado un ok
-        bookRepository.deleteBook(isbn);
-
-
-    }
-    //update=> modificar un libro por su isbn (PUT)
-    @PutMapping("/{isbn}")
-    public ResponseEntity<String> updateBook(@PathVariable String isbn, @RequestBody Book book) {
-        // Buscar el libro existente por su ISBN
-        Optional<Book> optionalBook = bookRepository.findByIsbn(isbn);
+        Optional<Book> optionalBook = this.bookRepository.findByIsbn(isbn);
 
         if (optionalBook.isPresent()) {
-            Book existingBook = optionalBook.get();
-
-            // Actualizar los campos del libro existente con los valores del libro actualizado
-            existingBook.setTitle(book.getTitle());
-            existingBook.setAuthor(book.getAuthor());
-            //existingBook.setIsbn(book.getIsbn()); // Si se permite cambiar el ISBN
-
-            // Guardar los cambios en el repositorio
-            bookRepository.update(existingBook);
-
-            // Respuesta de éxito
-            return new ResponseEntity<>("Libro actualizado correctamente", HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
-        // Si no se encuentra el libro, retornar un error 404
-        return new ResponseEntity<>("Libro no encontrado", HttpStatus.NOT_FOUND);
+        bookRepository.deleteBook(isbn);
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    //update=> modificar un libro por su isbn (PUT)
+    @PutMapping("/{isbn}")
+    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book book) {
+
+        Optional<Book> optionalBook = this.bookRepository.findByIsbn(isbn);
+
+        if (optionalBook.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Book existingBook = optionalBook.get();
+
+
+        existingBook.setAuthor(existingBook.getAuthor());
+        existingBook.setTitle(existingBook.getTitle());
+
+        bookRepository.save(existingBook);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
 
 }
 

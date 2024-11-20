@@ -12,6 +12,10 @@ public class Book {
         this.isbn = isbn;
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -20,17 +24,10 @@ public class Book {
         return author;
     }
 
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String newIsbn) {
-
-    }
-
-    public void setTitle(String title) {
+    public void setTitle(String author) {
     }
 
     public void setAuthor(String author) {
+        
     }
 }

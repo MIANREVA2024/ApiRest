@@ -12,7 +12,6 @@ public interface BookRepository {
 
     void deleteBook(String isbn);
 
-    void update(Book book);
 
 
 }
