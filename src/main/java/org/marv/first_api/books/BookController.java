@@ -49,18 +49,19 @@ public class BookController {
     }
 
     @DeleteMapping("/{isbn}")
-    public ResponseEntity<Book> deleteBook(@PathVariable String isbn, @RequestBody Book book){
+    public ResponseEntity<Book> deleteBook(@PathVariable String isbn){
         //si no existe return un 404
         //si se ha borrado un ok
-        Optional<Book> optionalBook = this.bookRepository.findByIsbn(isbn);
+        Optional<Book> optionalBook = bookRepository.findByIsbn(isbn);
 
         if (optionalBook.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            // Eliminar el libro si existe
+            bookRepository.bookdelete(optionalBook.get());
+            return ResponseEntity.ok().build(); // Retorna un 200 OK
         }
 
-        bookRepository.deleteBook(isbn);
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        // Si no existe, retorna un 404 Not Found
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     //update=> modificar un libro por su isbn (PUT)
