@@ -66,25 +66,23 @@ public class BookController {
 
     //update=> modificar un libro por su isbn (PUT)
     @PutMapping("/{isbn}")
-    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book book) {
+    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book updatedBook) {
 
         Optional<Book> optionalBook = this.bookRepository.findByIsbn(isbn);
 
         if (optionalBook.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            Book existingBook = optionalBook.get();
+            //Aca en esta lineo actualizo los campos del libro existente.
+            existingBook.setAuthor(updatedBook.getAuthor());
+            existingBook.setTitle(updatedBook.getTitle());
+
+            bookRepository.save(existingBook);
+
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        Book existingBook = optionalBook.get();
 
-
-        existingBook.setAuthor(existingBook.getAuthor());
-        existingBook.setTitle(existingBook.getTitle());
-
-        bookRepository.save(existingBook);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 
 }
 

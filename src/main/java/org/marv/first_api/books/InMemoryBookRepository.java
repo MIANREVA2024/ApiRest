@@ -23,7 +23,6 @@ public class InMemoryBookRepository implements BookRepository {
         for (Book book : booksBD) {
             if (book.getIsbn().equals(isbn))
                 return Optional.of(book);
-
         }
         return Optional.empty();
     }
@@ -31,22 +30,15 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public void save(Book book) {
         booksBD.add(book);
-
-
     }
 
     @Override
     public void bookdelete(Book book) {
         booksBD.removeIf(b -> b.getIsbn().equals(book.getIsbn()));
-
     }
 
 
-/*
-    @Override
-    public void deleteBook(String isbn) {
-        booksBD.removeIf(book -> book.getIsbn().equals(isbn));
-    }*/
+
 
 
 
