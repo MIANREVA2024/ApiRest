@@ -50,31 +50,28 @@ public class BookController {
 
     @DeleteMapping("/{isbn}")
     public ResponseEntity<Book> deleteBook(@PathVariable String isbn){
-        //si no existe return un 404
-        //si se ha borrado un ok
+
         Optional<Book> optionalBook = bookRepository.findByIsbn(isbn);
 
         if (optionalBook.isPresent()) {
-            // Eliminar el libro si existe
-            bookRepository.bookdelete(optionalBook.get());
-            return ResponseEntity.ok().build(); // Retorna un 200 OK
+
+            bookRepository.deleteBook(optionalBook.get());
+            return ResponseEntity.ok().build();
         }
 
-        // Si no existe, retorna un 404 Not Found
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    //update=> modificar un libro por su isbn (PUT)
     @PutMapping("/{isbn}")
-    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book updatedBook) {
+    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book book) {
 
         Optional<Book> optionalBook = this.bookRepository.findByIsbn(isbn);
 
         if (optionalBook.isPresent()) {
             Book existingBook = optionalBook.get();
-            //Aca en esta lineo actualizo los campos del libro existente.
-            existingBook.setAuthor(updatedBook.getAuthor());
-            existingBook.setTitle(updatedBook.getTitle());
+
+            existingBook.setAuthor(book.getAuthor());
+            existingBook.setTitle(book.getTitle());
 
             bookRepository.save(existingBook);
 

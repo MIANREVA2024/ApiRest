@@ -29,17 +29,18 @@ public class InMemoryBookRepository implements BookRepository {
 
     @Override
     public void save(Book book) {
-        booksBD.add(book);
+        findByIsbn(book.getIsbn()).ifPresentOrElse(
+                existBook -> {
+                    existBook.setTitle(book.getTitle());
+                    existBook.setAuthor(book.getAuthor());
+                }, () -> {
+                    booksBD.add(book);
+                }
+        );
     }
-
     @Override
-    public void bookdelete(Book book) {
+    public void deleteBook(Book book) {
         booksBD.removeIf(b -> b.getIsbn().equals(book.getIsbn()));
     }
-
-
-
-
-
 
 }
